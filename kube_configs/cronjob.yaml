@@ -1,0 +1,28 @@
+kind: CronJob
+apiVersion: batch/v1
+Metadata:
+    name: demo-cron
+    namespace: demo-ns
+
+spec:
+   schedule: "*/2 * * * *"
+   jobTemplete: 
+     spec:
+      template:
+        metadata:
+            name: minute-backup
+            labels:
+             app: minute-backup
+
+      spec:
+         containers:
+         - name: batch-container
+           image: busybox:latest
+           command: 
+               - "sh"
+               - "-c"
+               - >
+                 "echo "backup started"";
+            volumeMounts:
+              - name: data-volume
+ 
