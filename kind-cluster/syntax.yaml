@@ -1,0 +1,85 @@
+# 1. Key-Value Pair (Basic YAML)
+person:
+  name: chayan
+  age: 28
+  city: kolkata
+
+# 2. List / Array
+skills:
+  - python
+  - devops
+  - aws
+  - terraform
+
+# 3. Dictionary / Map (Nested Object)
+education:
+  degree: btech
+  year: 2020
+  branch: computer_science
+
+# 4. List of Dictionaries (Very common in DevOps configs)
+employees:
+  - name: chayan
+    role: devops
+    experience: 3
+  - name: rahul
+    role: backend
+    experience: 5
+
+# 5. Nested Structure (Used in Kubernetes, Docker Compose)
+person1:
+  name: chayan
+  skills:
+    - python
+    - devops
+    - aws
+  education:
+    degree: btech
+    year: 2020
+
+# 6. Boolean Values
+settings:
+  enabled: true
+  debug: false
+
+# 7. Numbers
+resources:
+  cpu: 2
+  memory: 4
+
+# 8. Multi-line String
+description: |
+  This is a DevOps learning file.
+  YAML is used in:
+  - Kubernetes
+  - Docker Compose
+  - GitHub Actions
+
+# 9. Environment Variables Style
+environment:
+  DB_HOST: localhost
+  DB_PORT: 5432
+
+# 10. Comments
+# This is a comment in YAML
+
+# 11. Multiple YAML Documents
+---
+app: frontend
+port: 3000
+---
+app: backend
+port: 8080
+
+# 12. Anchors & Aliases (Advanced YAML)
+default: &defaults
+  timeout: 30
+  retries: 3
+
+service1:
+  <<: *defaults
+  url: service1.example.com
+
+service2:
+  <<: *defaults
+  url: service2.example.com

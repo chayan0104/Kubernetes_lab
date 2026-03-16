@@ -1,0 +1,6 @@
+#kubectl run nginx --image=nginx -n ngnix-ns
+#command: kubectl apply -f namespace.yaml
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: nginx-ns
