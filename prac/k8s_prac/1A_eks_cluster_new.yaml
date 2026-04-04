@@ -1,0 +1,35 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: devops-cluster
+  region: ap-south-1
+  version: "1.29"
+
+# eksctl will automatically create VPC, subnets, and networking
+vpc:
+  cidr: "10.0.0.0/16"
+  clusterEndpoints:
+    publicAccess: true
+    privateAccess: true
+  nat:
+    gateway: Single
+
+iam:
+  withOIDC: true
+
+managedNodeGroups:
+  - name: devops-ng
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    volumeSize: 20
+    privateNetworking: true
+    ssh:
+      allow: true
+      publicKeyName: my-keypair
+    labels:
+      role: worker
+    tags:
+      nodegroup-role: worker

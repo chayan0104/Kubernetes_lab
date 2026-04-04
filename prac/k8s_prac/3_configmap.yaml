@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apache-web-content
+  namespace: apache-prod
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Apache Production App</title>
+        <style>
+          body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            display: grid;
+            place-items: center;
+            min-height: 100vh;
+          }
+          main {
+            max-width: 720px;
+            padding: 32px;
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            box-shadow: 0 24px 80px rgba(15, 23, 42, 0.35);
+          }
+          h1 {
+            margin-top: 0;
+            font-size: 2.4rem;
+          }
+          p {
+            line-height: 1.6;
+          }
+          code {
+            background: rgba(30, 41, 59, 0.95);
+            padding: 2px 6px;
+            border-radius: 6px;
+          }
+        </style>
+      </head>
+      <body>
+        <main>
+          <h1>Apache app is live</h1>
+          <p>
+            Traffic enters through an Ingress, goes to a Service, and reaches
+            healthy Apache pods managed by a Deployment.
+          </p>
+          <p>
+            This sample also includes a ConfigMap, HPA, and TLS-ready Ingress.
+          </p>
+          <p>
+            Health probe: <code>/healthz.html</code>
+          </p>
+        </main>
+      </body>
+    </html>
+  healthz.html: |
+    ok

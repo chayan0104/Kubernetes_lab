@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache
+  namespace: apache-prod
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: apache
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      initContainers:
+        - name: seed-web-content
+          image: busybox:1.36
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p /mnt/apache-data
+              if [ ! -f /mnt/apache-data/index.html ]; then
+                cp /seed/index.html /mnt/apache-data/index.html
+              fi
+              if [ ! -f /mnt/apache-data/healthz.html ]; then
+                cp /seed/healthz.html /mnt/apache-data/healthz.html
+              fi
+          volumeMounts:
+            - name: web-content
+              mountPath: /seed
+              readOnly: true
+            - name: apache-storage
+              mountPath: /mnt/apache-data
+      containers:
+        - name: apache
+          image: httpd:2.4.66
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          startupProbe:
+            httpGet:
+              path: /healthz.html
+              port: http
+            periodSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /healthz.html
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz.html
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 3
+          volumeMounts:
+            - name: apache-storage
+              mountPath: /usr/local/apache2/htdocs
+      volumes:
+        - name: web-content
+          configMap:
+            name: apache-web-content
+        - name: apache-storage
+          persistentVolumeClaim:
+            claimName: apache-pvc

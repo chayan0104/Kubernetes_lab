@@ -1,0 +1,36 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: devops-cluster
+  region: ap-south-1
+  version: "1.29"
+
+vpc:
+  id: vpc-12345678
+
+  subnets:
+    private:
+      ap-south-1a:
+        id: subnet-private1
+      ap-south-1b:
+        id: subnet-private2
+
+    public:
+      ap-south-1a:
+        id: subnet-public1
+      ap-south-1b:
+        id: subnet-public2
+
+iam:
+  withOIDC: true
+
+managedNodeGroups:
+  - name: devops-ng
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 1
+    maxSize: 3
+    privateNetworking: true
+    labels:
+      role: worker
